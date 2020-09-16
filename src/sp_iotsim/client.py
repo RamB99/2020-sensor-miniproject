@@ -34,7 +34,7 @@ async def main(port: int, addr: str, max_packets: int, log_file: Path = None):
     log_file: pathlib.Path
         where to store the data received (student must add code for this)
     """
-
+    
     uri = f"ws://{addr}:{port}"
 
     async with websockets.connect(uri) as websocket:
@@ -46,10 +46,16 @@ async def main(port: int, addr: str, max_packets: int, log_file: Path = None):
 
         if log_file:
             log_file = Path(log_file).expanduser()
-
+        
+        file = open('log_file.txt', 'w')
+        
         for _ in range(max_packets):
             data = await websocket.recv()
+            file.write(data + "\n")
+            file.flush()
             print(data)
+        
+        file.close()
 
 
 def cli():
